@@ -10,14 +10,14 @@ $(document).ready(function () {
             <div class="card-body">
               <h3 class="card-title margin-top-none">
                 <span class="js-result-title"></span>
-                <span class="js-result-year badge-primary"></span>
+                <span class="js-result-year badge"></span>
               </h3>
               <label class="js-result-modal-opener col paper-btn btn btn-warning" for="movie-info-modal">Info</label>
             </div>
           </div>
         </li>
       `);
-      
+
       movieElement.find('.js-result-title').text(movie.Title);
       movieElement.find('.js-result-year').text(movie.Year);
       movieElement.find('.js-result-modal-opener').attr('data-movie-id', movie.imdbID);
@@ -76,4 +76,44 @@ $(document).ready(function () {
       }
     });
   });
+
+
+  var elModal = $('.modal');
+
+  var resetModalInfo = function () {
+    elModal.find('.js-modal-movie-poster').attr('src', '');
+    elModal.find('.js-modal-movie-title').text('');
+    elModal.find('.js-modal-movie-rating').text('');
+    elModal.find('.js-modal-movie-genres').text('');
+    elModal.find('.js-modal-movie-plot').text('');
+  };
+
+  var insertModalInfo = function (response) {
+    elModal.find('.js-modal-movie-poster').attr('src', response.Poster);
+    elModal.find('.js-modal-movie-title').text(response.Title);
+    elModal.find('.js-modal-movie-rating').text(response.imdbRating);
+    elModal.find('.js-modal-movie-genres').text(response.Genre);
+    elModal.find('.js-modal-movie-plot').text(response.Plot);
+  };
+
+  // Natija labeli bosilganda modalda batafsil ma'lumotni ko'rsatish
+  elResultsList.on('click', '.js-result-modal-opener', function () {
+    var movieId = $(this).data('movie-id');
+
+    $.ajax('https://omdbapi.com', {
+      method: 'GET',
+      data: {
+        apikey: '249e8962',
+        plot: 'full',
+        i: movieId
+      },
+      timeout: 10000,
+      beforeSend: resetModalInfo,
+      success: insertModalInfo,
+      error: function (request, errorType, errorMessage) {
+        alert(`${errorType}: ${errorMessage}`);
+      }
+    });
+  });
+
 });
