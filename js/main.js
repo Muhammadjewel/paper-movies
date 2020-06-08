@@ -33,6 +33,18 @@ $(document).ready(function () {
   // Qidiruv formasi va inputini eslab qolish
   var elSearchForm = $('.js-movie-search-form');
   var elSearchInput = elSearchForm.find('.js-movie-search-input');
+  var elPagination = $('.pagination');
+
+  var createPagination = function (totalResults) {
+    // jami topilgan natijalarga ko'ra sahifalar sonini topish
+    var pagesCount = Math.ceil(parseInt(totalResults, 10) / 10);
+
+    elPagination.html('');
+
+    for (var i = 1; i <= pagesCount; i++) {
+      elPagination.append(`<button class="btn-warning margin-small" type="button" data-page="${i}" ${ i === 1 ? 'disabled' : '' }>${i}</button>`);
+    }
+  };
 
   // Qidiruv formasining topshirilish hodisasiga quloq solish
   elSearchForm.on('submit', function (evt) {
@@ -74,15 +86,7 @@ $(document).ready(function () {
 
         // kinolar topilsa, ko'rsatamiz
         showSearchResults(response.Search);
-        
-        // jami topilgan natijalarga ko'ra sahifalar sonini topish
-        var pagesCount = Math.ceil(parseInt(response.totalResults, 10) / 10);
-
-        $('.pagination').html('');
-
-        for (var i = 1; i <= pagesCount; i++) {
-          $('.pagination').append(`<button class="btn-warning margin-small" type="button" data-page="${i}" ${ i === 1 ? 'disabled' : '' }>${i}</button>`);
-        }
+        createPagination(response.totalResults);
       },
       error: function (request, errorType, errorMessage) {
         alert(`${errorType}: ${errorMessage}`);
@@ -125,6 +129,29 @@ $(document).ready(function () {
       success: insertModalInfo,
       error: function (request, errorType, errorMessage) {
         alert(`${errorType}: ${errorMessage}`);
+      }
+    });
+  });
+
+
+  // Pagination tugmasi bosilgandagi amallar
+  elPagination.on('click', 'button', function () {
+    // Barcha sahifalar tugmalari yoqiladi
+    elPagination.find('button').attr('disabled', false);
+
+    // Bosilgan tugma o'chiriladi
+    $(this).attr('disabled', true);
+
+    var currentPage = $(this).data('page');
+
+    var pageUrl = `${searchQuery}&page=${currentPage}`;
+
+    $.ajax(pageUrl, {
+      beforeSend: function () {
+        elResultsList.html('');
+      },
+      success: function (response) {
+        showSearchResults(response.Search);
       }
     });
   });
