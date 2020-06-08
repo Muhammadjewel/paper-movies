@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html class="page" lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OMDb bo'yicha mashq</title>
+  <link rel="stylesheet" href="css/normalize.css">
+  <link rel="stylesheet" href="css/paper.min.css">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body class="page__body">
+
+  <header class="container">
+    <div class="row flex-middle">
+      <div class="md-6 col">
+        <h1 class="margin-none">Kinolar</h1>
+      </div>
+      <section class="md-6 col">
+        <h2 class="visually-hidden">Izlash</h2>
+        <form action="https://www.omdbapi.com/" method="GET">
+          <div class="js-movie-search-input form-group margin-none">
+            <input class="input-block" type="search" name="search" placeholder="Kino nomi" required>
+          </div>
+        </form>
+      </section>
+    </div>
+  </header>
+
+
+  <main class="background-secondary padding-small">
+    <section class="results">
+      <div class="container">
+        <h2 class="margin-small">Qidiruv natijalari</h2>
+        <ul class="results__list row padding-none">
+          <li class="results__item result col sm-6 md-4">
+            <div class="result__card card">
+              <div class="card-body">
+                <h3 class="card-title margin-top-none">
+                  <span class="js-result-title">The Incredible Hulk</span>
+                  <span class="js-result-year">(2008)</span>
+                </h3>
+                <label class="js-result-modal-opener col paper-btn btn btn-warning" for="movie-info-modal">Info</label>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+
+  <footer class="padding">
+    <div class="container">
+      <p>MJ &copy; 2020</p>
+    </div>
+  </footer>
+
+
+  <!-- MODAL -->
+  <input class="modal-state" type="checkbox" id="movie-info-modal">
+  <div class="modal">
+    <label class="modal-bg" for="movie-info-modal"></label>
+    <div class="modal-body">
+      <label class="btn-close" for="movie-info-modal">X</label>
+      <img class="js-modal-movie-poster margin-bottom" src="https://placehold.it/250x300" alt="" width="250" height="300">
+      <h4 class="modal-title">
+        <span class="js-modal-movie-title">Movie Title</span> -
+        <a class="js-modal-movie-link" href="https://youtube.com/watch?v=">Watch trailer</a>
+      </h4>
+      <p class="modal-subtitle">Rating <span class="js-modal-movie-rating">6.7</span> - <span class="js-modal-movie-genres">Action, Sci-Fi</span></p>
+      <p class="js-modal-movie-plot modal-text">Depicting the events after the Gamma Bomb. 'The Incredible Hulk' tells the story of Dr Bruce Banner, who seeks a cure to his unique condition, which causes him to turn into a giant green monster under emotional stress. Whilst on the run from military which seeks his capture, Banner comes close to a cure. But all is lost when a new creature emerges; The Abomination.</p>
+    </div>
+  </div>
+
+  <script src="js/jquery.min.js"></script>
+  <script src="js/main.js"></script>
+</body>
+
+</html>
