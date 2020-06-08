@@ -1,6 +1,36 @@
 $(document).ready(function () {
-  // Qidiruv formasini eslab qolish
+  // Natijalar ro'yxatini o'zgaruvchiga saqlab olish
+  var elResultsList = $('.results__list');
+
+  var showSearchResults = function (foundMovies) {
+    var results = $.map(foundMovies, function (movie) {
+      var movieElement = $(`
+        <li class="results__item result col sm-6 md-4">
+          <div class="result__card card">
+            <div class="card-body">
+              <h3 class="card-title margin-top-none">
+                <span class="js-result-title"></span>
+                <span class="js-result-year badge-primary"></span>
+              </h3>
+              <label class="js-result-modal-opener col paper-btn btn btn-warning" for="movie-info-modal">Info</label>
+            </div>
+          </div>
+        </li>
+      `);
+      
+      movieElement.find('.js-result-title').text(movie.Title);
+      movieElement.find('.js-result-year').text(movie.Year);
+      movieElement.find('.js-result-modal-opener').attr('data-movie-id', movie.imdbID);
+
+      return movieElement;
+    });
+
+    elResultsList.append(results);
+  };
+
+  // Qidiruv formasi va inputini eslab qolish
   var elSearchForm = $('.js-movie-search-form');
+  var elSearchInput = elSearchForm.find('.js-movie-search-input');
 
   // Qidiruv formasining topshirilish hodisasiga quloq solish
   elSearchForm.on('submit', function (evt) {
@@ -8,7 +38,7 @@ $(document).ready(function () {
     evt.preventDefault();
   
     // Qidirilayotgan kino nomini eslab qolish
-    var movieName = $(this).find('.js-movie-search-input').val();
+    var movieName = elSearchInput.val();
 
     // Qidiruv matnini ko'rsatish
     $('.js-search-word').text(movieName);
@@ -21,13 +51,25 @@ $(document).ready(function () {
         s: movieName
       },
       timeout: 10000,
+      // yuborishdan oldin nima qilinadi
+      beforeSend: function () {
+        elResultsList.html('');
+        elSearchInput.attr('disabled', true);
+      },
+      // javob qaytgandan keyin
+      complete: function () {
+        elSearchInput.attr('disabled', false);
+      },
+      // muvaffaqiyatli javob bo'lsa
       success: function (response) {
+        // aytilgan nomdagi kino bo'lmasa
         if (response.Error) {
           alert(response.Error);
           return;
         }
-        
-        console.log(response);
+
+        // kinolar topilsa, ko'rsatamiz
+        showSearchResults(response.Search);
       },
       error: function (request, errorType, errorMessage) {
         alert(`${errorType}: ${errorMessage}`);
