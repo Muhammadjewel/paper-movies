@@ -1,3 +1,5 @@
+var searchQuery = '';
+
 $(document).ready(function () {
   // Natijalar ro'yxatini o'zgaruvchiga saqlab olish
   var elResultsList = $('.results__list');
@@ -43,6 +45,8 @@ $(document).ready(function () {
     // Qidiruv matnini ko'rsatish
     $('.js-search-word').text(movieName);
 
+    searchQuery = `https://omdbapi.com/?apiKey=249e8962&s=${movieName}`;
+
     // Internetga so'rov yuborish
     $.ajax('https://www.omdbapi.com/', {
       method: 'GET',
@@ -70,6 +74,15 @@ $(document).ready(function () {
 
         // kinolar topilsa, ko'rsatamiz
         showSearchResults(response.Search);
+        
+        // jami topilgan natijalarga ko'ra sahifalar sonini topish
+        var pagesCount = Math.ceil(parseInt(response.totalResults, 10) / 10);
+
+        $('.pagination').html('');
+
+        for (var i = 1; i <= pagesCount; i++) {
+          $('.pagination').append(`<button class="btn-warning margin-small" type="button" data-page="${i}" ${ i === 1 ? 'disabled' : '' }>${i}</button>`);
+        }
       },
       error: function (request, errorType, errorMessage) {
         alert(`${errorType}: ${errorMessage}`);
